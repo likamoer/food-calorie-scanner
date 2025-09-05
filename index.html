@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="食物识别与卡路里计算器">
+    <title>食物卡路里扫描器</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 添加 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1><i class="fas fa-utensils"></i> 食物卡路里扫描器</h1>
+            <p class="subtitle">上传食物照片，智能识别并计算卡路里</p>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 文件上传区域 -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-camera-retro"></i>
+                    </div>
+                    <p class="upload-text">点击或拖拽上传食物照片</p>
+                    <p class="upload-hint">支持 JPG、PNG 格式</p>
+                    <input type="file" id="fileInput" accept="image/*" capture="environment">
+                </div>
+            </div>
+
+            <!-- 图片预览区域 -->
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <div class="preview-container">
+                    <img id="previewImage" alt="预览图片">
+                    <button class="remove-image" id="removeImage">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 分析按钮 -->
+            <div class="action-section">
+                <button class="analyze-btn" id="analyzeBtn" disabled>
+                    <i class="fas fa-search"></i>
+                    开始分析食物
+                </button>
+            </div>
+
+            <!-- 加载状态 -->
+            <div class="loading-section" id="loadingSection" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>正在识别食物...</p>
+            </div>
+
+            <!-- 结果显示区域 -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-card">
+                    <h3><i class="fas fa-clipboard-list"></i> 识别结果</h3>
+                    
+                    <div class="food-info">
+                        <div class="food-name" id="foodName">
+                            <!-- 食物名称将在这里显示 -->
+                        </div>
+                        
+                        <div class="calorie-display">
+                            <div class="calorie-number" id="calorieNumber">0</div>
+                            <div class="calorie-unit">卡路里</div>
+                        </div>
+                    </div>
+
+                    <div class="nutrition-details" id="nutritionDetails">
+                        <!-- 营养成分详情将在这里显示 -->
+                    </div>
+
+                    <div class="confidence-score">
+                        <span class="confidence-label">识别准确度:</span>
+                        <span class="confidence-value" id="confidenceValue">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 重新分析按钮 -->
+            <div class="retry-section" id="retrySection" style="display: none;">
+                <button class="retry-btn" id="retryBtn">
+                    <i class="fas fa-redo"></i>
+                    重新上传
+                </button>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 食物卡路里扫描器. 数据仅供参考</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

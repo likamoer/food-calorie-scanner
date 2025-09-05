@@ -1,0 +1,425 @@
+/* 重置和基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* 应用容器 */
+.app-container {
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 头部样式 */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.header h1 {
+    color: #4A90E2;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.header h1 i {
+    margin-right: 0.5rem;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* 主要内容区域 */
+.main-content {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* 上传区域样式 */
+.upload-section {
+    margin-bottom: 1rem;
+}
+
+.upload-area {
+    border: 3px dashed #4A90E2;
+    border-radius: 15px;
+    padding: 2rem 1rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.upload-area:hover {
+    border-color: #357ABD;
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px);
+}
+
+.upload-area.dragover {
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #4A90E2;
+    margin-bottom: 1rem;
+}
+
+.upload-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+#fileInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* 预览区域样式 */
+.preview-section {
+    margin-bottom: 1rem;
+}
+
+.preview-container {
+    position: relative;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#previewImage {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-image {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #dc3545;
+    transition: all 0.3s ease;
+}
+
+.remove-image:hover {
+    background: rgba(220, 53, 69, 0.1);
+    transform: scale(1.1);
+}
+
+/* 按钮样式 */
+.action-section {
+    margin-bottom: 1rem;
+}
+
+.analyze-btn, .retry-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.analyze-btn:hover:not(:disabled), .retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+}
+
+.analyze-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.retry-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.retry-btn:hover {
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+}
+
+/* 加载状态样式 */
+.loading-section {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4A90E2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-section p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* 结果显示样式 */
+.results-section {
+    margin-bottom: 1rem;
+}
+
+.results-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.results-card h3 {
+    color: #4A90E2;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.food-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.food-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+}
+
+.calorie-display {
+    text-align: center;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+    padding: 0.8rem;
+    border-radius: 15px;
+    min-width: 100px;
+}
+
+.calorie-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.calorie-unit {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.nutrition-details {
+    margin-bottom: 1rem;
+}
+
+.nutrition-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.nutrition-item:last-child {
+    border-bottom: none;
+}
+
+.nutrition-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.nutrition-value {
+    color: #333;
+    font-weight: 600;
+}
+
+.confidence-score {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.confidence-label {
+    color: #666;
+    margin-right: 0.5rem;
+}
+
+.confidence-value {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* 页脚样式 */
+.footer {
+    background: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    padding: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+}
+
+/* 响应式设计 - 平板设备 */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 768px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .main-content {
+        padding: 2rem;
+    }
+    
+    .food-info {
+        flex-direction: row;
+    }
+    
+    .calorie-display {
+        min-width: 120px;
+    }
+}
+
+/* 响应式设计 - 桌面设备 */
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 600px;
+    }
+    
+    .upload-area {
+        padding: 3rem 2rem;
+    }
+    
+    .upload-icon {
+        font-size: 4rem;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.preview-section, .results-section {
+    animation: fadeIn 0.5s ease;
+}
+
+/* 触摸设备优化 */
+@media (hover: none) {
+    .upload-area:hover {
+        transform: none;
+    }
+    
+    .analyze-btn:hover:not(:disabled), .retry-btn:hover {
+        transform: none;
+    }
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    .header, .upload-area, .results-card, .loading-section {
+        background: rgba(52, 73, 94, 0.9);
+        color: #ecf0f1;
+    }
+    
+    .subtitle, .upload-hint, .confidence-label {
+        color: #bdc3c7;
+    }
+    
+    .footer {
+        background: rgba(52, 73, 94, 0.9);
+        color: #bdc3c7;
+    }
+}

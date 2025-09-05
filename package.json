@@ -1,0 +1,60 @@
+{
+  "name": "food-calorie-scanner",
+  "version": "1.0.0",
+  "description": "H5 mobile web app for food image recognition and calorie calculation / H5移动端食物图片识别与卡路里计算应用",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Building for production...' && mkdir -p dist && cp -r * dist/",
+    "test": "echo 'No tests specified yet'"
+  },
+  "keywords": [
+    "food",
+    "calorie",
+    "recognition",
+    "h5",
+    "mobile",
+    "web-app",
+    "image-processing",
+    "nutrition",
+    "health",
+    "ai"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/food-calorie-scanner",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/food-calorie-scanner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/food-calorie-scanner/issues"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "optionalDependencies": {
+    "prettier": "^3.0.0",
+    "eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "iOS >= 12",
+    "Android >= 6"
+  ],
+  "pwa": {
+    "name": "食物卡路里扫描器",
+    "short_name": "卡路里扫描",
+    "description": "智能识别食物照片并计算卡路里",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#4A90E2",
+    "background_color": "#ffffff"
+  }
+}
