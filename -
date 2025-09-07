@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+version=0.1.9
+# 安装包地址
+DOWNLOAD_URL=http://s3plus.sankuai.com/mcopilot-cli/release/v$version/mcopilot_cli_"$version"
+# 安装位置
+DESTINATION=/usr/local/bin/mc
+
+# 检查操作系统类型
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  # Linux
+  DOWNLOAD_URL="$DOWNLOAD_URL"_linux_amd64
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  # 获取系统架构
+  ARCH=$(uname -m)
+  if [[ $ARCH == "arm64" ]]; then
+    # ARM 架构
+    DOWNLOAD_URL="$DOWNLOAD_URL"_darwin_arm64
+  elif [[ $ARCH == "x86_64" ]]; then
+    # x86 架构
+    DOWNLOAD_URL="$DOWNLOAD_URL"_darwin_amd64
+  else
+    # 其他架构
+    echo "不支持的 macOS 架构"
+  fi
+else
+  echo "暂不支持此操作系统"
+fi
+
+# 下载安装包
+echo "正在下载安装包..."
+wget -q $DOWNLOAD_URL -O $DESTINATION
+chmod +x $DESTINATION
+echo "安装 CatPaw CLI 成功"

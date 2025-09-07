@@ -1,13 +1,20 @@
 {
   "name": "food-calorie-scanner",
   "version": "1.0.0",
-  "description": "H5 mobile web app for food image recognition and calorie calculation / H5移动端食物图片识别与卡路里计算应用",
-  "main": "index.html",
+  "description": "Full-stack food image recognition and calorie calculation app with React frontend and Node.js backend",
+  "main": "server/server.js",
   "scripts": {
-    "start": "python -m http.server 8000",
-    "dev": "python -m http.server 8000",
-    "build": "echo 'Building for production...' && mkdir -p dist && cp -r * dist/",
-    "test": "echo 'No tests specified yet'"
+    "start": "npm run build && npm run start:server",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm start",
+    "start:server": "cd server && npm start",
+    "build": "cd client && npm run build",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm install",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "test": "cd client && npm test && cd ../server && npm test",
+    "clean": "rm -rf client/build server/uploads/* client/node_modules server/node_modules node_modules"
   },
   "keywords": [
     "food",
@@ -32,11 +39,12 @@
     "url": "https://github.com/yourusername/food-calorie-scanner/issues"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "http-server": "^14.1.1"
   },
   "optionalDependencies": {
-    "prettier": "^3.0.0",
-    "eslint": "^8.0.0"
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
   },
   "engines": {
     "node": ">=14.0.0"
