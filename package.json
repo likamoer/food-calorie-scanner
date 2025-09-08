@@ -64,5 +64,8 @@
     "display": "standalone",
     "theme_color": "#4A90E2",
     "background_color": "#ffffff"
+  },
+  "dependencies": {
+    "axios": "^1.11.0"
   }
 }

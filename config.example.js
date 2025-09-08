@@ -4,8 +4,8 @@
 const API_CONFIG = {
     // 百度AI食物识别API配置
     BAIDU: {
-        API_KEY: 'your_baidu_api_key_here',
-        SECRET_KEY: 'your_baidu_secret_key_here',
+        API_KEY: 'uJVV8gNTgQG5fhLt3srNFI8m',
+        SECRET_KEY: 'a0vBiJ6WvNm9jCFzOROEp2hNwZx4YMez',
         // API端点
         TOKEN_URL: 'https://aip.baidubce.com/oauth/2.0/token',
         DISH_URL: 'https://aip.baidubce.com/rest/2.0/image-classify/v2/dish',
