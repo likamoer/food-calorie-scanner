@@ -7,7 +7,7 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: process.env.REACT_APP_API_BASE_URL || '/api',
-      timeout: 30000, // 30秒超时
+      timeout: Number(process.env.REACT_APP_API_TIMEOUT_MS || 60000), // 默认60秒，可用 env 覆盖
       headers: {
         'Content-Type': 'application/json',
       },
@@ -86,7 +86,7 @@ class ApiService {
     formData.append('image', file);
 
     const response = await this.api.post<ApiResponse<FoodAnalysisResult>>(
-      '/food/analyze',
+      '/ai/analyze',
       formData,
       {
         headers: {
@@ -100,6 +100,57 @@ class ApiService {
     }
 
     return response.data.data!;
+  }
+
+  /**
+   * 流式分析食物图片（SSE）
+   */
+  async analyzeFoodStream(file: File, onDelta: (chunk: string) => void): Promise<FoodAnalysisResult> {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const resp = await fetch((this.api.defaults.baseURL || '/api') + '/ai/analyze-stream', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!resp.ok || !resp.body) {
+      throw new Error('流式请求失败');
+    }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let idx;
+      while ((idx = buffer.indexOf('\n\n')) >= 0) {
+        const chunk = buffer.slice(0, idx).trim();
+        buffer = buffer.slice(idx + 2);
+        if (!chunk) continue;
+        if (chunk.startsWith('data:')) {
+          const dataStr = chunk.slice(5).trim();
+          try {
+            const evt = JSON.parse(dataStr);
+            if (evt.type === 'delta' && typeof evt.content === 'string') {
+              onDelta(evt.content);
+            } else if (evt.type === 'final' && evt.data) {
+              return evt.data as FoodAnalysisResult;
+            } else if (evt.type === 'error') {
+              throw new Error(evt.message || evt.error || '分析失败');
+            }
+          } catch {
+            // 忽略不完整的 JSON 片段
+          }
+        }
+      }
+    }
+
+    throw new Error('流式连接已结束但未返回结果');
   }
 
   /**

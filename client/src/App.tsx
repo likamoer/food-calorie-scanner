@@ -11,6 +11,7 @@ import FileUpload from './components/FileUpload';
 import ImagePreview from './components/ImagePreview';
 import LoadingState from './components/LoadingState';
 import ResultsDisplay from './components/ResultsDisplay';
+import StreamingOutput from './components/StreamingOutput';
 import { apiService } from './services/api';
 import { FoodAnalysisResult, UploadStatus } from './types';
 
@@ -20,6 +21,7 @@ function App() {
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(UploadStatus.IDLE);
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [streamText, setStreamText] = useState<string>('');
 
   const handleFileSelect = useCallback(async (file: File) => {
     try {
@@ -54,9 +56,12 @@ function App() {
     try {
       setError(null);
       setUploadStatus(UploadStatus.ANALYZING);
+      setStreamText('');
 
-      console.log('开始分析食物图片...');
-      const result = await apiService.analyzeFood(currentImage);
+      console.log('开始分析食物图片(流式)...');
+      const result = await apiService.analyzeFoodStream(currentImage, (delta) => {
+        setStreamText(prev => prev + delta);
+      });
       
       console.log('分析结果:', result);
       setAnalysisResult(result);
@@ -77,6 +82,7 @@ function App() {
     setImagePreview(null);
     setAnalysisResult(null);
     setError(null);
+    setStreamText('');
     setUploadStatus(UploadStatus.IDLE);
   }, [imagePreview]);
 
@@ -115,7 +121,10 @@ function App() {
           )}
 
           {uploadStatus === UploadStatus.ANALYZING && (
-            <LoadingState message="正在识别食物，请稍候..." />
+            <>
+              <LoadingState message="正在识别食物，请稍候..." />
+              <StreamingOutput text={streamText} />
+            </>
           )}
 
           {analysisResult && uploadStatus === UploadStatus.SUCCESS && (

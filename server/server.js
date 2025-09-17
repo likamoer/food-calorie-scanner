@@ -42,10 +42,12 @@ app.use('/uploads', express.static(uploadDir));
 // 导入路由
 const foodRoutes = require('./routes/food');
 const healthRoutes = require('./routes/health');
+const aiRoutes = require('./routes/ai');
 
 // 使用路由
 app.use('/api/food', foodRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/ai', aiRoutes);
 
 // 根路径
 app.get('/', (req, res) => {
@@ -55,7 +57,8 @@ app.get('/', (req, res) => {
         endpoints: {
             health: '/api/health',
             analyze: 'POST /api/food/analyze',
-            upload: 'POST /api/food/upload'
+            upload: 'POST /api/food/upload',
+            aiAnalyze: 'POST /api/ai/analyze'
         }
     });
 });
@@ -101,11 +104,32 @@ app.use((error, req, res, next) => {
     });
 });
 
-// 启动服务器
-app.listen(PORT, () => {
+// 启动服务器并提升超时设置（允许AI分析更长响应时间）
+const serverInstance = app.listen(PORT, () => {
     console.log(`🚀 服务器运行在端口 ${PORT}`);
     console.log(`📱 API文档: http://localhost:${PORT}/`);
     console.log(`🌍 环境: ${process.env.NODE_ENV || 'development'}`);
 });
+
+// Node.js HTTP 超时参数可调节
+try {
+    const headersTimeoutMs = Number(process.env.SERVER_HEADERS_TIMEOUT_MS || 65000); // 默认65s
+    const requestTimeoutMs = Number(process.env.SERVER_REQUEST_TIMEOUT_MS || 120000); // 默认120s
+    const keepAliveTimeoutMs = Number(process.env.SERVER_KEEPALIVE_TIMEOUT_MS || 60000); // 默认60s
+
+    if (serverInstance && serverInstance.headersTimeout !== undefined) {
+        serverInstance.headersTimeout = headersTimeoutMs;
+    }
+    if (serverInstance && serverInstance.requestTimeout !== undefined) {
+        serverInstance.requestTimeout = requestTimeoutMs;
+    }
+    if (serverInstance && serverInstance.keepAliveTimeout !== undefined) {
+        serverInstance.keepAliveTimeout = keepAliveTimeoutMs;
+    }
+
+    console.log(`🛠️ Server timeouts set: headersTimeout=${headersTimeoutMs}ms, requestTimeout=${requestTimeoutMs}ms, keepAliveTimeout=${keepAliveTimeoutMs}ms`);
+} catch (e) {
+    console.warn('无法设置服务器超时参数:', e?.message || e);
+}
 
 module.exports = app;
