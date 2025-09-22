@@ -60,6 +60,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error 
         {...getRootProps()} 
         isDragActive={isDragActive}
         style={{ opacity: isLoading ? 0.5 : 1 }}
+        className="touchable"
       >
         <input {...getInputProps()} />
         
@@ -81,6 +82,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error 
           onClick={open} 
           disabled={isLoading}
           style={{ flex: 1 }}
+          className="touchable"
         >
           📁 选择文件
         </Button>
@@ -90,6 +92,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error 
           disabled={isLoading}
           variant="secondary"
           style={{ flex: 1 }}
+          className="touchable"
         >
           📷 拍照
         </Button>

@@ -27,6 +27,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
         onClick={onAnalyze} 
         disabled={isAnalyzing}
         size="lg"
+        className="touchable"
       >
         {isAnalyzing ? (
           <>

@@ -5,13 +5,16 @@ import {
   Header,
   Card,
   Footer,
-  ErrorMessage
+  ErrorMessage,
+  MobileOptimizations,
+  GestureIndicator
 } from './components/styles';
 import FileUpload from './components/FileUpload';
 import ImagePreview from './components/ImagePreview';
 import LoadingState from './components/LoadingState';
 import ResultsDisplay from './components/ResultsDisplay';
 import StreamingOutput from './components/StreamingOutput';
+import ParticleBackground from './components/ParticleBackground';
 import { apiService } from './services/api';
 import { FoodAnalysisResult, UploadStatus } from './types';
 
@@ -93,53 +96,62 @@ function App() {
   const isLoading = uploadStatus === UploadStatus.UPLOADING || uploadStatus === UploadStatus.ANALYZING;
 
   return (
-    <AppContainer>
-      <Header>
-        <h1>🍎 食物卡路里扫描器</h1>
-        <p>上传食物照片，智能识别并计算卡路里</p>
-      </Header>
+    <MobileOptimizations>
+      <AppContainer>
+        <ParticleBackground particleCount={60} />
+        
+        <Header>
+          <h1>🍎 食物卡路里扫描器</h1>
+          <p>上传食物照片，智能识别并计算卡路里</p>
+        </Header>
 
-      <MainContent>
-        <Card>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          
-          {!imagePreview && (
-            <FileUpload
-              onFileSelect={handleFileSelect}
-              isLoading={isLoading}
-              error={null}
-            />
-          )}
+        <MainContent>
+          <Card>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            
+            {!imagePreview && (
+              <FileUpload
+                onFileSelect={handleFileSelect}
+                isLoading={isLoading}
+                error={null}
+              />
+            )}
 
-          {imagePreview && !analysisResult && (
-            <ImagePreview
-              imageUrl={imagePreview}
-              onRemove={handleRemoveImage}
-              onAnalyze={handleAnalyze}
-              isAnalyzing={uploadStatus === UploadStatus.ANALYZING}
-            />
-          )}
+            {imagePreview && !analysisResult && (
+              <ImagePreview
+                imageUrl={imagePreview}
+                onRemove={handleRemoveImage}
+                onAnalyze={handleAnalyze}
+                isAnalyzing={uploadStatus === UploadStatus.ANALYZING}
+              />
+            )}
 
-          {uploadStatus === UploadStatus.ANALYZING && (
-            <>
-              <LoadingState message="正在识别食物，请稍候..." />
-              <StreamingOutput text={streamText} />
-            </>
-          )}
+            {uploadStatus === UploadStatus.ANALYZING && (
+              <>
+                <LoadingState message="正在识别食物，请稍候..." />
+                <StreamingOutput text={streamText} />
+              </>
+            )}
 
-          {analysisResult && uploadStatus === UploadStatus.SUCCESS && (
-            <ResultsDisplay
-              result={analysisResult}
-              onRetry={handleRetry}
-            />
-          )}
-        </Card>
-      </MainContent>
+            {analysisResult && uploadStatus === UploadStatus.SUCCESS && (
+              <ResultsDisplay
+                result={analysisResult}
+                onRetry={handleRetry}
+              />
+            )}
+          </Card>
+        </MainContent>
 
-      <Footer>
-        <p>&copy; 2024 食物卡路里扫描器. 数据仅供参考</p>
-      </Footer>
-    </AppContainer>
+        <Footer>
+          <p>&copy; 2024 食物卡路里扫描器. 数据仅供参考</p>
+        </Footer>
+
+        {/* 移动端手势指示器 */}
+        <GestureIndicator>
+          👆 点击或拖拽上传图片
+        </GestureIndicator>
+      </AppContainer>
+    </MobileOptimizations>
   );
 }
 
