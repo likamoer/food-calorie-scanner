@@ -77,3 +77,10 @@ textarea:focus {
   height: 100vh;
   box-sizing: border-box;
 }
+
+/* 很奇怪，为什么react-router@7.9 在页面过度的时候，会存在canvas的动画
+  但是这个过渡动画很影响美观，因此这里将其隐藏
+*/
+canvas[popover='manual'] {
+  display: none;
+}

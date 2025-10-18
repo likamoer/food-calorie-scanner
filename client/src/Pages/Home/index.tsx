@@ -1,91 +1,161 @@
-import React, { useEffect, useRef } from 'react';
-import img1 from '../../assets/img1.webp';
-import img2 from '../../assets/img2.avif';
-import img3 from '../../assets/img3.avif';
-import img6 from '../../assets/img6.webp';
-import img7 from '../../assets/img7.avif';
-import img8 from '../../assets/img8.avif';
-import img9 from '../../assets/img9.avif';
+import React, { useState } from 'react';
 import './index.css';
 
+// 计算当前周的日期数组（周一到周日），包含日期和星期几
+interface WeekDateInfo {
+  date: string; // MM.DD格式
+  dayOfWeek: string; // 星期几
+  isToday: boolean; // 是否是今天
+}
+
+const getCurrentWeekDates = (): WeekDateInfo[] => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0是周日，1-6是周一到周六
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+  
+  // 计算本周一的日期（如果今天是周日，则周一为6天前）
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + mondayOffset);
+  
+  // 生成今天的日期字符串，用于比较
+  const todayStr = `${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+  
+  // 生成周一到周日的日期数组，包含日期、星期几和是否是今天
+  const weekDates: WeekDateInfo[] = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    
+    // 格式化为MM.DD
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${month}.${day}`;
+    
+    // 获取星期几（周一到周日对应数组索引1-7）
+    const dayIndex = date.getDay();
+    
+    weekDates.push({
+      date: dateStr,
+      dayOfWeek: weekDays[dayIndex],
+      isToday: dateStr === todayStr // 判断是否是今天
+    });
+  }
+  
+  return weekDates;
+};
+
+
 export default function Home() {
-    const textElementRef = useRef<any>(null);
-    useEffect(() => {
-        if (textElementRef?.current) {
-            const textElement = textElementRef.current;
-            console.dir(textElement);
-            const originalText = textElement.innerText;
-            
-            // 清空文本内容，准备开始打字机效果
-            // @ts-ignore
-            textElement.textContent = '';
-            
-            let index = 0;
-            const typingSpeed = 100; // 打字速度（毫秒）
-            
-            // @ts-ignore
-            function typeWriter() {
-                if (index < originalText.length) {
-                    // @ts-ignore
-                    textElement.textContent += originalText.charAt(index);
-                    index++;
-                    setTimeout(typeWriter, typingSpeed);
-                }
-            }
-            
-            // 启动打字机效果
-            setTimeout(typeWriter, 500); // 延迟500毫秒开始，让页面加载更自然
-        }
-    }, []);
-  return <div className="father">
-        <div className="container">
-            <div className="image-grid">
-                <img 
-                    className="circle-image img1" 
-                    src={img1}
-                    alt="Mountain view"
-                />
-                <img 
-                    className="circle-image img2"
-                    src={img2}
-                    alt="Camping gear"
-                />
-                <img 
-                    className="circle-image img3" 
-                    src={img3}
-                    alt="Tent"
-                />
-                <img 
-                    className="circle-image img6"
-                    src={img6}
-                    alt="Cooking equipment"
-                />
+    const [useInfo, setUseInfo] = useState({
+        username: '燃脂每一天',
+    });
+    const [weekDates, setWeekDates] = useState<WeekDateInfo[]>(getCurrentWeekDates());
+    // 选择日期
+    const handleSelectDate = (date: string) => {
+        setWeekDates(weekDates.map(item => ({
+            ...item,
+            isToday: item.date === date
+        })));
+    }
+    return (
+        <div className="home-box">
+            <div className='main-content'>
+                {/* 用户信息头部 */}
+                <div className="header">
+                    <div className="user-info">
+                        <div className="avatar"></div>
+                        <h2 className="username">{useInfo.username}</h2>
+                    </div>
+                </div>
 
-                <img 
-                    className="circle-image img7"
-                    src={img7}
-                    alt="Cooking equipment"
-                />
+                {/* 标题和时间筛选器 */}
+                <div className="content-section">
+                    <h1 className="page-title">追踪你的卡路里</h1>
+                    <div className="time-filter">
+                        {
+                            weekDates.map((item, index) => (
+                                <div 
+                                    onClick={() => handleSelectDate(item.date)}
+                                    className={item.isToday ? "filter-btn-day-item filter-btn-day-item-active" : "filter-btn-day-item"}
+                                >
+                                    <div className='date-item'>{item.date.split('.')[1]}</div>
+                                    <div className='weekday-item'>{item.dayOfWeek}</div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
 
-                <img 
-                    className="circle-image img8"
-                    src={img8}
-                    alt="Cooking equipment"
-                />
-
-                <img 
-                    className="circle-image img9"
-                    src={img9}
-                    alt="Cooking equipment"
-                />
-                <div className="center-icon"></div>
+                {/* 日常结果卡片 */}
+                <div className="daily-result-card">
+                    <div className="card-header">
+                        <div className="card-icon time-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3 className="card-title">Daily Result</h3>
+                    </div>
+                    
+                    <div className="progress-section">
+                        <div className="percentage">78%</div>
+                        
+                        {/* 环形进度条和卡路里信息 */}
+                        <div className="circular-progress">
+                            <svg className="progress-ring" viewBox="0 0 100 100">
+                                {/* 背景圆环 */}
+                                <circle className="progress-ring-bg" cx="50" cy="50" r="45" />
+                                {/* 进度圆环 */}
+                                <circle className="progress-ring-fill" cx="50" cy="50" r="45" />
+                            </svg>
+                            <div className="progress-text">
+                                <span className="current-calories">1155</span>
+                                <span className="total-calories">1850</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="text-content">
-                <h1>扫描食物，立即获知热量！</h1>
-                <p id="typewriter-text" ref={textElementRef}>一键拍照，快速分析食物营养成分，轻松掌握每日摄入热量，科学管理健康饮食。</p>
+            {/* 底部导航栏 */}
+            <div className='bottom-nav-box'>
+                <div className="bottom-nav">
+                    <div className="nav-item active">
+                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span className="nav-text">主页</span>
+                    </div>
+                    
+                    <div className="nav-item">
+                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span className="nav-text">历史</span>
+                    </div>
+                    
+                    {/* <button className="nav-item camera-button">
+                        <div className="camera-icon-container">
+                            <svg className="camera-icon" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </div>
+                    </button> */}
+                    
+                    <div className="nav-item">
+                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span className="nav-text">我的</span>
+                    </div>
+                </div>
             </div>
-            <button className="start-button">快速开始</button>
         </div>
-    </div>
+    );
 }

@@ -1,167 +1,359 @@
-.father {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    /* background: linear-gradient(0deg, #b3b2ac30 0%, #5c736ae8 50%, #b3b2ac57 100%); */
-    background: linear-gradient(0deg, #a0b8b2 0%, #5c736ae8 40%, #b3b2ac57 100%);
+/* 全局样式 */
+.home-box {
+    width: 100%;
     height: 100%;
+    padding-bottom: 10px;
     box-sizing: border-box;
+    background-color: #f3f3f3;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     /* 为底部导航栏留出空间 */
+}
+
+.main-content {
+    width: 100%;
+    height: calc(100% - 10px - 60px);
+    box-sizing: border-box;
+}
+
+/* 头部样式 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e0e0e0;
+    background-image: url('../../assets/default-user-img.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.username {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 内容区域样式 */
+.content-section {
+    padding: 0 16px 16px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 16px;
+}
+
+.time-filter {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.filter-btn-day-item {
+    color: #666;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0px;
-    padding-bottom: 10px;
+    padding: 8px 0px;
+    border: 1px solid #e0e0e0;
+    width: 11%;
+}
+
+.filter-btn-day-item-active {
+    background-color: white;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.weekday-item {
+    color: #000;
+}
+
+/* 日常结果卡片样式 */
+.daily-result-card {
+    margin: 0 16px 24px;
+    background-color: #e8f5e8;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-icon {
+    background-color: white;
+}
+
+.time-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #4caf50;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
     color: #333;
 }
 
-.container {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 20px;
-    padding-bottom: 0px;
-    box-sizing: border-box;
+.progress-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* 图片网格布局 */
-.image-grid {
+.percentage {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+}
+
+.circular-progress {
     position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.progress-ring {
     width: 100%;
-    height: 300px;
-    margin-bottom: 40px;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+    fill: white;
+    stroke: #e0e0e0;
+    stroke-width: 10;
+}
+
+.progress-ring-fill {
+    fill: none;
+    stroke: #4ade80;
+    stroke-width: 10;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 62;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.current-calories {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.total-calories {
+    font-size: 14px;
+    color: #777;
+    margin-top: 2px;
+}
+
+/* 营养成分卡片样式 */
+.nutrition-card {
+    margin: 0 16px 32px;
+    background-color: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.nutrition-icon {
+    background-color: #f5f5f5;
+}
+
+.nutrition-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #666;
+}
+
+.expand-button {
+    margin-left: auto;
+    padding: 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.expand-icon {
+    width: 20px;
+    height: 20px;
+    color: #999;
+}
+
+.nutrition-items {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.nutrition-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nutrition-label {
+    display: flex;
+    justify-content: space-between;
+}
+
+.item-name {
+    font-size: 14px;
+    color: #666;
+}
+
+.item-value {
+    font-size: 14px;
+    color: #666;
+}
+
+.nutrition-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-percentage {
+    font-size: 12px;
+    font-weight: 500;
+    color: #777;
+    min-width: 30px;
+}
+
+.bar-container {
+    flex: 1;
+    height: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
     overflow: hidden;
 }
 
-.circle-image {
-    position: absolute;
-    width: 100px;
-    height: 100px;
+.bar-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.carbs-bar {
+    width: 56%;
+    background-color: #f48fb1;
+}
+
+.protein-bar {
+    width: 22%;
+    background-color: #81c784;
+}
+
+.fat-bar {
+    width: 32%;
+    background-color: #9575cd;
+}
+
+/* 底部导航栏样式 */
+.bottom-nav-box {
+    width: 100%;
+    height: 60px;
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+.bottom-nav {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}
+
+.nav-item.active {
+    color: #4caf50;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.nav-text {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.camera-button {
+    position: relative;
+}
+
+.camera-icon-container {
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    transform: translateY(50px);
-    animation: scrollUp 1s ease forwards;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -20px;
 }
 
-/* 滚动向上动画 */
-@keyframes scrollUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 图片位置 */
-.img1 { 
-    top: 0; 
-    left: 20px;
-    width: 23%;
-    height: 150px;
-    border-radius: 40px;
-    animation-delay: 0.1s;
-}
-.img2 { 
-    top: 0; 
-    right: 20px; 
-    animation-delay: 0.2s;
-}
-.img3 { 
-    top: 160px; 
-    left: 10px;
-    width: 70px;
-    height: 110px;
-    border-radius: 30px;
-    animation-delay: 0.3s;
-}
-.img6 { 
-    top: 120px; 
-    right: 20px; 
-    width: 70px;
-    height: 110px;
-    border-radius: 30px;
-    animation-delay: 0.4s;
-}
-
-.img7 {
-    top: 230px;
-    left: 130px;
-    border-radius: 30px;
-    width: 70px;
-    height: 100px;
-    animation-delay: 0.5s;
-}
-
-.img8 {
-    top: 250px;
-    right: 10px;
-    animation-delay: 0.6s;
-}
-
-.img9 {
-    top: 280px;
-    left: 20px;
-    animation-delay: 0.6s;
-}
-
-/* 中心图标 */
-.center-icon {
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    /* background-image: url('https://media.istockphoto.com/id/2157436773/photo/cafeteria-double-beef-burger-gourmet.webp?a=1&b=1&s=612x612&w=0&k=20&c=iKuLVDkN-WPdUZit1qH1NdR-Y4fLztqMY6aAogyXSfM='); */
-    background-image: url('../../assets/img-center.webp');
-    background-size: 100% 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    box-shadow: 0 4px 15px rgba(139, 195, 74, 0.4);
-    z-index: 10;
-}
-
-/* 文本内容 */
-.text-content {
-    margin-bottom: 30px;
-}
-
-h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 16px;
-    line-height: 1.3;
-}
-
-p {
-    font-size: 16px;
-    color: #fff;
-    opacity: 0.7;
-    line-height: 1.5;
-    margin-bottom: 30px;
-}
-
-/* 按钮样式 */
-.start-button {
-    background-color: #052424;
-    color: white;
-    border: none;
-    padding: 16px 48px;
-    border-radius: 28px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
-}
-
-.start-button:hover {
-    background-color: #1B5E20;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+.camera-icon {
+    width: 24px;
+    height: 24px;
 }
