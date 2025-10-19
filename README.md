@@ -15,8 +15,8 @@
 ## 🛠️ 技术栈
 
 ### 前端
-- **框架**: React 18 + TypeScript
-- **样式**: Styled Components + CSS-in-JS
+- **框架**: React 19 + TypeScript
+- **样式**: Less、CSS
 - **状态管理**: React Hooks
 - **文件上传**: React Dropzone
 - **HTTP客户端**: Axios
@@ -93,6 +93,8 @@ food-calorie-scanner/
 │   ├── public/
 │   ├── src/
 │   │   ├── components/     # React组件
+│   │   ├── pages/          # 页面组件
+│   │   ├── utils/          # 全局工具函数
 │   │   ├── services/       # API服务
 │   │   ├── types/          # TypeScript类型定义
 │   │   ├── App.tsx         # 主应用组件
