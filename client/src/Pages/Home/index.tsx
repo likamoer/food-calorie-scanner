@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import FooterBar from '../../components/FooterBar';
+import { useJump } from '../../utils/utils';
 import './index.css';
 
 // 计算当前周的日期数组（周一到周日），包含日期和星期几
@@ -46,17 +48,26 @@ const getCurrentWeekDates = (): WeekDateInfo[] => {
 };
 
 export default function Home() {
-    const [useInfo, setUseInfo] = useState({
-        username: '燃脂每一天',
-    });
-    const [weekDates, setWeekDates] = useState<WeekDateInfo[]>(getCurrentWeekDates());
-    // 选择日期
-    const handleSelectDate = (date: string) => {
-        setWeekDates(weekDates.map(item => ({
-            ...item,
-            isToday: item.date === date
-        })));
-    }
+      const [useInfo, setUseInfo] = useState({
+          username: '燃脂每一天',
+      });
+      const [weekDates, setWeekDates] = useState<WeekDateInfo[]>(getCurrentWeekDates());
+      
+      // 在组件顶层调用Hook，符合React Hooks规则
+      const navigate = useJump();
+
+      // 选择日期
+      const handleSelectDate = (date: string) => {
+          setWeekDates(weekDates.map(item => ({
+              ...item,
+              isToday: item.date === date
+          })));
+      }
+      // 底部蓝点击事件
+      const handleClickFooterBar = (key: string) => {
+        // 直接使用顶层定义的navigate函数
+        navigate(`/${key}`);
+      }
     return (
         <div className="home-box">
             <div className='main-content'>
@@ -119,7 +130,12 @@ export default function Home() {
             </div>
 
             {/* 底部导航栏 */}
-            
+            <FooterBar
+                defaultTab='home'
+                className='footer-bar-box'
+                afterTabChanged={handleClickFooterBar}
+            />
+
         </div>
     );
 }

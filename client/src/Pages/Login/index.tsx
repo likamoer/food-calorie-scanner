@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 import img1 from '../../assets/img1.webp';
 import img2 from '../../assets/img2.avif';
 import img3 from '../../assets/img3.avif';
@@ -10,6 +9,7 @@ import img7 from '../../assets/img7.avif';
 import img8 from '../../assets/img8.avif';
 import img9 from '../../assets/img9.avif';
 import img10 from '../../assets/img10.avif';
+import { useJump } from '../../utils/utils';
 import './index.less';
 
 export default function Home() {
@@ -100,7 +100,7 @@ export default function Home() {
         ]
     );
     
-    let navigate = useNavigate();
+    let navigate = useJump();
 
     function clickGetStart() {
         navigate('/home');
