@@ -99,6 +99,7 @@ export default function Home() {
             },
         ]
     );
+    
     let navigate = useNavigate();
 
     function clickGetStart() {
@@ -132,7 +133,8 @@ export default function Home() {
             setTimeout(typeWriter, 500); // 延迟500毫秒开始，让页面加载更自然
         }
     }, []);
-  return <div className="father">
+
+    return <div className="father">
         <div className="container">
             <div className="image-grid">
                 {
