@@ -20,14 +20,17 @@
     padding: 20px;
     padding-bottom: 0px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* 图片网格布局 */
 .image-grid {
     position: relative;
     width: 100%;
-    height: 300px;
-    margin-bottom: 40px;
+    height: 53%;
     overflow: hidden;
 }
 
@@ -55,55 +58,52 @@
     }
 }
 
+@keyframes scrollUpCenter {
+    from {
+        opacity: 0;
+        transform: translateY(50px) translateX(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
 /* 图片位置 */
-.img1 { 
-    top: 0; 
-    left: 20px;
+.img1 {
     width: 23%;
-    height: 150px;
+    height: 3rem;
     border-radius: 40px;
     animation-delay: 0.1s;
 }
-.img2 { 
-    top: 0; 
-    right: 20px; 
+.img2 {
     animation-delay: 0.2s;
 }
-.img3 { 
-    top: 160px; 
-    left: 10px;
-    width: 70px;
-    height: 110px;
+.img3 {
+    width: 1.4rem;
+    height: 2.2rem;
     border-radius: 30px;
     animation-delay: 0.3s;
 }
-.img6 { 
-    top: 120px; 
-    right: 20px; 
-    width: 70px;
-    height: 110px;
+.img6 {
+    width: 1.4rem;
+    height: 2.2rem;
     border-radius: 30px;
     animation-delay: 0.4s;
 }
 
 .img7 {
-    top: 230px;
-    left: 130px;
     border-radius: 30px;
-    width: 70px;
-    height: 100px;
+    width: 1.4rem;
+    height: 2rem;
     animation-delay: 0.5s;
 }
 
 .img8 {
-    top: 250px;
-    right: 10px;
     animation-delay: 0.6s;
 }
 
 .img9 {
-    top: 280px;
-    left: 20px;
     animation-delay: 0.6s;
 }
 
@@ -113,8 +113,8 @@
     top: 100px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 100px;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
     /* background-image: url('https://media.istockphoto.com/id/2157436773/photo/cafeteria-double-beef-burger-gourmet.webp?a=1&b=1&s=612x612&w=0&k=20&c=iKuLVDkN-WPdUZit1qH1NdR-Y4fLztqMY6aAogyXSfM='); */
     background-image: url('../../assets/img-center.webp');
@@ -123,15 +123,11 @@
     background-repeat: no-repeat;
     box-shadow: 0 4px 15px rgba(139, 195, 74, 0.4);
     z-index: 10;
-}
-
-/* 文本内容 */
-.text-content {
-    margin-bottom: 30px;
+    animation: scrollUpCenter 1s ease forwards;
 }
 
 h1 {
-    font-size: 28px;
+    font-size: 0.56rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 16px;
@@ -139,21 +135,22 @@ h1 {
 }
 
 p {
-    font-size: 16px;
+    font-size: 0.32rem;
     color: #fff;
     opacity: 0.7;
     line-height: 1.5;
-    margin-bottom: 30px;
+    margin-bottom: 0.6rem;
 }
 
 /* 按钮样式 */
 .start-button {
+    margin-bottom: 30px;
     background-color: #052424;
     color: white;
     border: none;
-    padding: 16px 48px;
-    border-radius: 28px;
-    font-size: 18px;
+    padding: 0.32rem 2rem;
+    border-radius: 0.56rem;
+    font-size: 0.36rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;

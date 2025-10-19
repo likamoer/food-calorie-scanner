@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -25,6 +25,45 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <style>
+      /* 基础重置样式 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+      }
+    </style>
+    <script>
+      // rem适配脚本 - 以750px设计稿为基准，1rem = 100px
+      (function() {
+        function setRemUnit() {
+          // 获取设备宽度
+          const deviceWidth = document.documentElement.clientWidth || window.innerWidth;
+          // 限制最大宽度为768px（平板以上设备）
+          const maxWidth = 768;
+          const width = Math.min(deviceWidth, maxWidth);
+          // 计算根元素字体大小（750px设计稿下1rem=100px）
+          const rootFontSize = (width / 750) * 100;
+          // 设置根元素字体大小
+          document.documentElement.style.fontSize = rootFontSize + 'px';
+        }
+
+        // 初始化
+        setRemUnit();
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', setRemUnit);
+        // 监听屏幕旋转
+        window.addEventListener('orientationchange', setRemUnit);
+        // 监听页面加载完成
+        window.addEventListener('load', setRemUnit);
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
