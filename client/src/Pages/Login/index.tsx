@@ -10,7 +10,7 @@ import img7 from '../../assets/img7.avif';
 import img8 from '../../assets/img8.avif';
 import img9 from '../../assets/img9.avif';
 import img10 from '../../assets/img10.avif';
-import './index.css';
+import './index.less';
 
 export default function Home() {
     const textElementRef = useRef<any>(null);
