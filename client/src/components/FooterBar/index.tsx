@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppstoreOutline, CameraOutline, UserOutline } from 'antd-mobile-icons';
+import { AppstoreOutline, CameraOutline, UserOutline, FileOutline } from 'antd-mobile-icons';
 import './index.less';
 
 
@@ -31,6 +31,12 @@ export default function FooterBar(props: any) {
             }
         },
         {
+            name: '记录',
+            key: 'record',
+            path: '/record',
+            icon: <FileOutline fontSize={24}/>
+        },
+        {
             name: '我的',
             key: 'user',
             path: '/user',
@@ -41,10 +47,16 @@ export default function FooterBar(props: any) {
 
     // 切换底部bar时触发
     function clickTabItem(key: string) {
+        // 不能重复点击相同的tab
+        if (activeKey === key) {
+            return;
+        }
+        // 切换前事件
         if (!beforeTabChange(activeKey)){
             return;
         }
         setActiveKey(key);
+        // 切换后事件
         afterTabChanged(key);
     }
 

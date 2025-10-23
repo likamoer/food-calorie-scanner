@@ -65,6 +65,9 @@ export default function Home() {
       }
       // 底部蓝点击事件
       const handleClickFooterBar = (key: string) => {
+        if (key === 'photo') {
+            return;
+        }
         // 直接使用顶层定义的navigate函数
         navigate(`/${key}`);
       }

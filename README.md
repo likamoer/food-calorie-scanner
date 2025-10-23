@@ -16,6 +16,10 @@
 
 ### 前端
 - **框架**: React 19 + TypeScript
+- **内置mobile组件库**: Antd-Mobile
+- **icon管理**: Antd-Mobile-Icon、Iconfont
+- **路由管理**: React-Router(统一使用useJump进行跳转)
+- **状态管理**: Redux Toolkit(封装公共状态管理逻辑)
 - **样式**: Less、CSS
 - **状态管理**: React Hooks
 - **文件上传**: React Dropzone
