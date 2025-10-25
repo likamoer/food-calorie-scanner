@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "React frontend for food calorie scanner",
   "private": true,
+  "homepage": ".",
   "proxy": "http://localhost:3001",
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.1",

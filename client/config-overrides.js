@@ -1,4 +1,4 @@
-const { override, fixBabelImports } = require('customize-cra')
+const { override, fixBabelImports, setWebpackPublicPath } = require('customize-cra')
 const addLessLoader = require("customize-cra-less-loader")
 
 module.exports = override(
