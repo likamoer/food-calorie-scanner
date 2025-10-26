@@ -89,6 +89,10 @@ npm run dev:client
 - 后端 API: http://localhost:3001
 - API文档: http://localhost:3001/
 
+### 桥能力说明
+
+* window.cameraBridge 唤起相机拍照功能
+
 ## 📁 项目结构
 
 ```
