@@ -37,7 +37,7 @@ export default function Home() {
                 src: img3,
                 name: 'img3',
                 style: {
-                    top: '3.2rem',
+                    top: '2.5rem',
                     left: '0.2rem'
                 }
             },
@@ -85,8 +85,8 @@ export default function Home() {
                 src: img9,
                 name: 'img9',
                 style: {
-                    top: '5.8rem',
-                    left: '0.2rem'
+                    top: '5rem',
+                    left: '0.1rem'
                 }
             },
             {
@@ -153,7 +153,7 @@ export default function Home() {
                 <h1>扫描食物，获知热量！</h1>
                 <p id="typewriter-text" ref={textElementRef}>一键拍照，快速分析食物营养成分，轻松掌握每日摄入热量，科学管理健康饮食。</p>
             </div>
-            <button className="start-button" onClick={clickGetStart}>快速开始</button>
         </div>
+        <button className="start-button" onClick={clickGetStart}>快速开始</button>
     </div>
 }

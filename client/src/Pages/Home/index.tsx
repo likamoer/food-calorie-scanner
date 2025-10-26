@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import FooterBar from '../../components/FooterBar';
-import { useJump } from '../../utils/utils';
+import { useJump, useCamera } from '../../utils/utils';
 import './index.css';
 
 // 计算当前周的日期数组（周一到周日），包含日期和星期几
@@ -55,6 +55,8 @@ export default function Home() {
       
       // 在组件顶层调用Hook，符合React Hooks规则
       const navigate = useJump();
+      // 调用相机拍照
+      const callCameraFn = useCamera();
 
       // 选择日期
       const handleSelectDate = (date: string) => {
@@ -66,6 +68,9 @@ export default function Home() {
       // 底部蓝点击事件
       const handleClickFooterBar = (key: string) => {
         if (key === 'photo') {
+            alert('调用相机拍照');
+            // @ts-ignore
+            callCameraFn({ value: '12345' });
             return;
         }
         // 直接使用顶层定义的navigate函数

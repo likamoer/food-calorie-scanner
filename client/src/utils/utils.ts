@@ -6,6 +6,19 @@ export function useJump() {
     return (route: any) => navigate(route);
 }
 
+// 调用相机拍照功能
+export function useCamera() {
+    return (params: any) => {
+        // @ts-ignore
+        if (window.cameraBridge) {
+            alert('进入桥能力');
+            // @ts-ignore
+            return window.cameraBridge?.postMessage(params);
+        }
+        alert('当前环境不支持调用相机拍照');
+    };
+}
+
 // 缓存get
 
 

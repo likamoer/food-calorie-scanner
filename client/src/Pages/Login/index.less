@@ -2,18 +2,17 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     /* background: linear-gradient(0deg, #b3b2ac30 0%, #5c736ae8 50%, #b3b2ac57 100%); */
     background: linear-gradient(0deg, #a0b8b2 0%, #5c736ae8 40%, #b3b2ac57 100%);
+    width: 100%;
     height: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    padding: 0px;
-    padding-bottom: 10px;
     color: #333;
     .container {
         width: 100%;
-        height: 100%;
+        height: calc(100% - 30px - 1rem);
         text-align: center;
         padding: 20px;
         padding-bottom: 0px;
@@ -21,12 +20,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
         /* 图片网格布局 */
         .image-grid {
             position: relative;
             width: 100%;
-            height: 53%;
+            height: 65%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
             overflow: hidden;
             .circle-image {
                 position: absolute;
@@ -41,8 +42,8 @@
             }
             /* 图片位置 */
             .img1 {
-                width: 23%;
-                height: 3rem;
+                width: 1.4rem;
+                height: 2.2rem;
                 border-radius: 40px;
                 animation-delay: 0.1s;
             }
@@ -111,20 +112,20 @@
                 margin-bottom: 0.6rem;
             }
         }
-        /* 按钮样式 */
-        .start-button {
-            margin-bottom: 30px;
-            background-color: #052424;
-            color: white;
-            border: none;
-            padding: 0.32rem 2rem;
-            border-radius: 0.56rem;
-            font-size: 0.36rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
-        }
+    }
+    /* 按钮样式 */
+    .start-button {
+        margin-bottom: 30px;
+        background-color: #052424;
+        color: white;
+        border: none;
+        padding: 0.32rem 2rem;
+        border-radius: 0.56rem;
+        font-size: 0.36rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
     }
 }
 
