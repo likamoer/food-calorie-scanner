@@ -9,10 +9,26 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// 初始化数据库
+const { initDatabase } = require('./database/init');
+initDatabase()
+    .then(() => {
+        console.log('✅ 数据库初始化完成');
+    })
+    .catch((err) => {
+        console.error('❌ 数据库初始化失败:', err);
+    });
+
 // 创建上传目录
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// 创建database目录
+const dbDir = path.join(__dirname, 'database');
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
 }
 
 // 安全中间件
@@ -43,11 +59,19 @@ app.use('/uploads', express.static(uploadDir));
 const foodRoutes = require('./routes/food');
 const healthRoutes = require('./routes/health');
 const aiRoutes = require('./routes/ai');
+const userRoutes = require('./routes/users');
+const authRoutes = require('./routes/auth');
+const buyRoutes = require('./routes/buy');
+const analysisRoutes = require('./routes/analysisResults');
 
 // 使用路由
 app.use('/api/food', foodRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/buy', buyRoutes);
+app.use('/api/analyzeResults', analysisRoutes);
 
 // 根路径
 app.get('/', (req, res) => {
@@ -56,9 +80,26 @@ app.get('/', (req, res) => {
         version: '1.0.0',
         endpoints: {
             health: '/api/health',
-            analyze: 'POST /api/food/analyze',
-            upload: 'POST /api/food/upload',
-            aiAnalyze: 'POST /api/ai/analyze'
+            food: {
+                analyze: 'POST /api/food/analyze',
+                upload: 'POST /api/food/upload',
+                aiAnalyze: 'POST /api/ai/analyze'
+            },
+            user: {
+                create: 'POST /api/users/create',
+                query: 'GET /api/users/:id'
+            },
+            auth: {
+                login: 'POST /api/auth/login'
+            },
+            buy: {
+                scanFrequency: 'POST /api/buy/scanFrequency',
+                callback: 'POST /api/buy/callback'
+            },
+            analysis: {
+                store: 'POST /api/analyzeResults/store',
+                history: 'GET /api/analysisResults/history'
+            }
         }
     });
 });
