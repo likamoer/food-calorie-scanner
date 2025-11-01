@@ -54,7 +54,7 @@ export default function Home() {
                 name: 'img5',
                 style: {
                     top: '8rem',
-                    left: '0.6rem'
+                    left: '0.2rem'
                 }
             },
             {

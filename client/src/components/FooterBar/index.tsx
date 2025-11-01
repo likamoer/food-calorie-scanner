@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppstoreOutline, CameraOutline, UserOutline, FileOutline } from 'antd-mobile-icons';
+import { useCamera } from '../../utils/utils';
 import './index.less';
 
 
@@ -44,9 +45,15 @@ export default function FooterBar(props: any) {
         },
     ]);
     const [activeKey, setActiveKey] = useState(defaultTab);
+    const callCameraFn = useCamera();
 
     // 切换底部bar时触发
     function clickTabItem(key: string) {
+        if (key === 'photo') {
+            // @ts-ignore
+            callCameraFn({});
+            return;
+        }
         // 不能重复点击相同的tab
         if (activeKey === key) {
             return;
@@ -59,6 +66,16 @@ export default function FooterBar(props: any) {
         // 切换后事件
         afterTabChanged(key);
     }
+
+    useEffect(
+        () => {
+            //@ts-ignore 监听相机返回的消息
+            window.receiveCameraBridgeMessage = function(value) {
+                alert(`相机返回的结果-base64: ${value}`);
+            }
+        },
+        []
+    )
 
     return (
         <div className={`footer-bar ${className || ''}`}>

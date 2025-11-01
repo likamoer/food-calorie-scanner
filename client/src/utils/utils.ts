@@ -11,7 +11,6 @@ export function useCamera() {
     return (params: any) => {
         // @ts-ignore
         if (window.cameraBridge) {
-            alert('进入桥能力');
             // @ts-ignore
             return window.cameraBridge?.postMessage(params);
         }

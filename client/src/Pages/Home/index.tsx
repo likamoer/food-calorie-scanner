@@ -68,7 +68,6 @@ export default function Home() {
       // 底部蓝点击事件
       const handleClickFooterBar = (key: string) => {
         if (key === 'photo') {
-            alert('调用相机拍照');
             // @ts-ignore
             callCameraFn({ value: '12345' });
             return;
