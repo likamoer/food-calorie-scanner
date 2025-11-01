@@ -6,9 +6,10 @@ interface FileUploadProps {
   onFileSelect: (file: File) => void;
   isLoading: boolean;
   error: string | null;
+  onCameraMode?: () => void;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error, onCameraMode }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       onFileSelect(acceptedFiles[0]);
@@ -88,7 +89,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error 
         </Button>
         
         <Button 
-          onClick={handleCameraCapture} 
+          onClick={onCameraMode || handleCameraCapture} 
           disabled={isLoading}
           variant="secondary"
           style={{ flex: 1 }}
