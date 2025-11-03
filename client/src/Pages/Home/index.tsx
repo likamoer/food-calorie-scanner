@@ -48,25 +48,25 @@ const getCurrentWeekDates = (): WeekDateInfo[] => {
 };
 
 export default function Home() {
-      const [useInfo, setUseInfo] = useState({
-          username: '燃脂每一天',
-      });
-      const [weekDates, setWeekDates] = useState<WeekDateInfo[]>(getCurrentWeekDates());
-      
-      // 在组件顶层调用Hook，符合React Hooks规则
-      const navigate = useJump();
-      // 调用相机拍照
-      const callCameraFn = useCamera();
+    const [useInfo, setUseInfo] = useState({
+        username: '燃脂每一天',
+    });
+    const [weekDates, setWeekDates] = useState<WeekDateInfo[]>(getCurrentWeekDates());
+    
+    // 在组件顶层调用Hook，符合React Hooks规则
+    const navigate = useJump();
+    // 调用相机拍照
+    const callCameraFn = useCamera();
 
-      // 选择日期
-      const handleSelectDate = (date: string) => {
-          setWeekDates(weekDates.map(item => ({
-              ...item,
-              isToday: item.date === date
-          })));
-      }
-      // 底部蓝点击事件
-      const handleClickFooterBar = (key: string) => {
+    // 选择日期
+    const handleSelectDate = (date: string) => {
+        setWeekDates(weekDates.map(item => ({
+            ...item,
+            isToday: item.date === date
+        })));
+    }
+    // 底部蓝点击事件
+    const handleClickFooterBar = (key: string) => {
         if (key === 'photo') {
             // @ts-ignore
             callCameraFn({ value: '12345' });
@@ -74,7 +74,7 @@ export default function Home() {
         }
         // 直接使用顶层定义的navigate函数
         navigate(`/${key}`);
-      }
+    }
     return (
         <div className="home-box">
             <div className='main-content'>
