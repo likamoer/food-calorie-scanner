@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Popup } from 'antd-mobile'
 import img1 from '../../assets/img1.webp';
 import img2 from '../../assets/img2.avif';
 import img3 from '../../assets/img3.avif';
@@ -10,6 +11,7 @@ import img8 from '../../assets/img8.avif';
 import img9 from '../../assets/img9.avif';
 import img10 from '../../assets/img10.avif';
 import { useJump } from '../../utils/utils';
+import Register from './Register';
 import './index.less';
 
 export default function Home() {
@@ -99,10 +101,17 @@ export default function Home() {
             },
         ]
     );
+    const [isShowLoginModal, setIsShowLoginModal] = useState<boolean>(false);
     
     let navigate = useJump();
 
+    // 唤起登陆弹窗
     function clickGetStart() {
+        console.log('clickGetStart');
+        if (true) {
+            setIsShowLoginModal(true);
+            return;
+        }
         navigate('/home');
     }
 
@@ -134,8 +143,8 @@ export default function Home() {
         }
     }, []);
 
-    return <div className="father">
-        <div className="container">
+    return <div className={isShowLoginModal ? 'father login-father-box' : 'father'}>
+        <div className="container" style={{ visibility: isShowLoginModal ? 'hidden' : 'visible' }}>
             <div className="image-grid">
                 {
                     imageInfo.map((item: any,) => (
@@ -154,6 +163,17 @@ export default function Home() {
                 <p id="typewriter-text" ref={textElementRef}>一键拍照，快速分析食物营养成分，轻松掌握每日摄入热量，科学管理健康饮食。</p>
             </div>
         </div>
-        <button className="start-button" onClick={clickGetStart}>快速开始</button>
+        <button className="start-button" style={{ visibility: isShowLoginModal ? 'hidden' : 'visible' }} onClick={clickGetStart}>快速开始</button>
+        <Popup
+            mask={false}
+            visible={isShowLoginModal}
+            bodyStyle={{
+                borderTopLeftRadius: '20px',
+                borderTopRightRadius: '20px',
+                height: '70vh',
+            }}
+        >
+            <Register />
+        </Popup>
     </div>
 }
