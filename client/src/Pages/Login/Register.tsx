@@ -45,7 +45,6 @@ export default function Register(){
       const res = await registryUserInfo({ username, password, phone });
     } catch (error) {
       console.error('注册失败:', error);
-      alert('注册失败，请稍后重试');
     }
   };
 

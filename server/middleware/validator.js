@@ -8,6 +8,7 @@
  */
 const validateCreateUser = (req, res, next) => {
     const { username, phoneNumber, password } = req.body;
+    console.log('校验用户创建参数:', req.body);
 
     // 校验用户名
     if (!username || typeof username !== 'string' || username.trim().length === 0) {
