@@ -10,7 +10,7 @@ import img7 from '../../assets/img7.avif';
 import img8 from '../../assets/img8.avif';
 import img9 from '../../assets/img9.avif';
 import img10 from '../../assets/img10.avif';
-import { useJump } from '../../utils/utils';
+import { useJump, getCacheUserInfo } from '../../utils/utils';
 import Register from './Register';
 import './index.less';
 
@@ -107,12 +107,11 @@ export default function Home() {
 
     // 唤起登陆弹窗
     function clickGetStart() {
-        console.log('clickGetStart');
-        if (true) {
-            setIsShowLoginModal(true);
+        if (getCacheUserInfo()?.token) {
+            navigate('/home');
             return;
         }
-        navigate('/home');
+        setIsShowLoginModal(true);
     }
 
     useEffect(() => {

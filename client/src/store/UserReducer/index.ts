@@ -1,6 +1,6 @@
 const initialState = {
     // 用户手机号
-    phone: '12345678901',
+    phoneNumber: '12345678901',
     // 用户token
     token: '',
     // 用户姓名

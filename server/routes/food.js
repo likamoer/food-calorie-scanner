@@ -4,6 +4,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const FoodRecognitionService = require('../services/foodRecognitionService');
+const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -41,7 +42,8 @@ const upload = multer({
 const foodService = new FoodRecognitionService();
 
 // 图片上传接口
-router.post('/upload', upload.single('image'), async (req, res) => {
+// 需要认证token
+router.post('/upload', authMiddleware, upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
@@ -73,7 +75,8 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 });
 
 // 分析食物接口
-router.post('/analyze', upload.single('image'), async (req, res) => {
+// 需要认证token
+router.post('/analyze', authMiddleware, upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
@@ -124,7 +127,9 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
 });
 
 // Base64图片分析接口（适用于相机拍照）
-router.post('/analyze-base64', async (req, res) => {
+// 分析Base64编码的食物图片接口
+// 需要认证token
+router.post('/analyze-base64', authMiddleware, async (req, res) => {
     try {
         const { image, filename } = req.body;
         
@@ -167,7 +172,9 @@ router.post('/analyze-base64', async (req, res) => {
 });
 
 // 获取营养信息
-router.get('/nutrition/:foodName', async (req, res) => {
+// 获取食物营养信息接口
+// 需要认证token
+router.get('/nutrition/:foodName', authMiddleware, async (req, res) => {
     try {
         const { foodName } = req.params;
         
@@ -196,7 +203,9 @@ router.get('/nutrition/:foodName', async (req, res) => {
 });
 
 // 获取食物历史记录
-router.get('/history', (req, res) => {
+// 历史记录接口
+// 需要认证token
+router.get('/history', authMiddleware, (req, res) => {
     // TODO: 实现用户历史记录功能
     res.json({
         success: true,

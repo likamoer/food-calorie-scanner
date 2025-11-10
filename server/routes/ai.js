@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const AIFoodAnalysisService = require('../services/aiFoodAnalysisService');
+const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -36,7 +37,8 @@ const upload = multer({
 const aiService = new AIFoodAnalysisService();
 
 // 新的 AI 分析端点：POST /api/ai/analyze
-router.post('/analyze', upload.single('image'), async (req, res) => {
+// 需要认证token
+router.post('/analyze', authMiddleware, upload.single('image'), async (req, res) => {
 	try {
 		if (!req.file) {
 			res.status(400).json({ error: '没有上传文件', message: '请选择一个图片文件' });
@@ -74,7 +76,9 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
 module.exports = router;
 
 // 流式输出：SSE 版本
-router.post('/analyze-stream', upload.single('image'), async (req, res) => {
+// 流式 AI 分析端点：POST /api/ai/analyze-stream
+// 需要认证token
+router.post('/analyze-stream', authMiddleware, upload.single('image'), async (req, res) => {
 	// 设置 Server-Sent Events 头部
 	res.setHeader('Content-Type', 'text/event-stream');
 	res.setHeader('Cache-Control', 'no-cache');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Input, Toast } from 'antd-mobile'
 import { registryUserInfo } from '../../utils/api'
+import { useJump, setCacheUserInfo } from '../../utils/utils';
 import './register.less'
 
 export default function Register(){
@@ -14,6 +15,7 @@ export default function Register(){
   });
 
   const timerRef = useRef<any>(null);
+  const jump = useJump();
 
   // 处理获取验证码
   const handleGetVerificationCode = () => {
@@ -24,7 +26,6 @@ export default function Register(){
 
   // 保存 注册表单字段逻辑
   const handleRegistryFormChange = (key: string, value: any) => {
-    console.log(key, value, typeof value);
     setRegistryFormData({
       ...registryFormData,
       [key]: value,
@@ -43,6 +44,11 @@ export default function Register(){
     }
     try {
       const res = await registryUserInfo({ username, password, phone });
+      if (res?.data?.token) {
+        // 跳转首页并缓存用户信息
+        setCacheUserInfo(res?.data);
+        jump('/home');
+      }
     } catch (error) {
       console.error('注册失败:', error);
     }

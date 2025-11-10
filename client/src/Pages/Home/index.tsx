@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FooterBar from '../../components/FooterBar';
-import { useJump, useCamera } from '../../utils/utils';
+import { useJump, useCamera, getCacheUserInfo } from '../../utils/utils';
 import './index.css';
 
 // 计算当前周的日期数组（周一到周日），包含日期和星期几
@@ -75,6 +75,15 @@ export default function Home() {
         // 直接使用顶层定义的navigate函数
         navigate(`/${key}`);
     }
+    // 组件挂载时从缓存中获取用户信息
+    useEffect(() => {
+        const userInfo = getCacheUserInfo();
+        console.log('userInfo-81', userInfo);
+        if (userInfo) {
+            setUseInfo(userInfo);
+        }
+    }, []);
+
     return (
         <div className="home-box">
             <div className='main-content'>
