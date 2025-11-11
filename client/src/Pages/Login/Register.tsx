@@ -2,16 +2,36 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input, Toast } from 'antd-mobile'
 import { registryUserInfo } from '../../utils/api'
 import { useJump, setCacheUserInfo } from '../../utils/utils';
-import './register.less'
+import './register.less';
+
+// 定义登录注册标签枚举
+enum TabType {
+  REGISTER = 'register',
+  LOGIN = 'login',
+  VERIFY_CODE_LOGIN = 'verify-code-login'
+}
 
 export default function Register(){
-  const [curTab, setCurTab] = useState('register');
+  const [curTab, setCurTab] = useState<TabType>(TabType.REGISTER);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  // 注册表单
   const [registryFormData, setRegistryFormData] = useState({
     username: '',
     password: '',
     phone: '',
+  });
+
+  // 用户/密码表单
+  const [loginFormData, setLoginFormData] = useState({
+    username: '',
+    password: '',
+  });
+
+  // 手机/验证码表单
+  const [verifyCodeFormData, setVerifyCodeFormData] = useState({
+    phone: '',
+    verifyCode: '',
   });
 
   const timerRef = useRef<any>(null);
@@ -73,37 +93,72 @@ export default function Register(){
 
   return <div className='register-or-login-box'>
     <div className='tab-box'>
-      <div className={`tab-item ${curTab === 'register' ? 'active' : ''}`} onClick={() => setCurTab('register')}>注册</div>
-      <div className={`tab-item ${curTab === 'login' ? 'active' : ''}`} onClick={() => setCurTab('login')}>登录</div>
-    </div>
-    {
-      curTab === 'register' && <div className='register-content'>
-        <div className='registry-content-item'>
-          <div className='registry-username-box-label'>用户名</div>
-          <Input placeholder='请输入用户名' onChange={(value) => handleRegistryFormChange('username', value)} clearable/>
-        </div>
-        <div className='registry-content-item'>
-          <div className='registry-username-box-label'>密码</div>
-          <Input placeholder='请输入密码' onChange={(value) => handleRegistryFormChange('password', value)} type='password' clearable/>
-        </div>
-        <div className='registry-content-item'>
-          <div className='registry-username-box-label'>手机号</div>
-          <Input placeholder='请输入手机号' onChange={(value) => handleRegistryFormChange('phone', value)} type='number' clearable/>
-        </div>
-        {false && <div className='registry-content-item'>
-          <div className='registry-username-box-label'>短信验证码</div>
-          <div className='verification-code-box'>
-            <Input placeholder='请输入验证码' type='number' clearable/>
-            <div 
-              className={`registry-get-verification-code ${isCountingDown ? 'disabled-registry-get-verification-code' : ''}`}
-              onClick={handleGetVerificationCode}
-              style={{ pointerEvents: isCountingDown ? 'none' : 'auto' }}
-            >
-              {isCountingDown ? `获取验证码 ${countdown}s` : '获取验证码'}
-            </div>
+        <div className={`tab-item ${curTab === TabType.REGISTER ? 'active' : ''}`} onClick={() => setCurTab(TabType.REGISTER)}>注册</div>
+        <div className={`tab-item ${curTab !== TabType.REGISTER ? 'active' : ''}`} onClick={() => setCurTab(TabType.LOGIN)}>登录</div>
+      </div>
+      {
+        curTab === TabType.REGISTER && <div className='register-content'>
+          <div className='registry-content-item'>
+            <div className='registry-username-box-label'>用户名</div>
+            <Input placeholder='请输入用户名' onChange={(value) => handleRegistryFormChange('username', value)} clearable/>
           </div>
-        </div>}
-        <div className='registry-button' onClick={handleRegistryClick}>注册</div>
+          <div className='registry-content-item'>
+            <div className='registry-username-box-label'>密码</div>
+            <Input placeholder='请输入密码' onChange={(value) => handleRegistryFormChange('password', value)} type='password' clearable/>
+          </div>
+          <div className='registry-content-item'>
+            <div className='registry-username-box-label'>手机号</div>
+            <Input placeholder='请输入手机号' onChange={(value) => handleRegistryFormChange('phone', value)} type='number' clearable/>
+          </div>
+          {false && <div className='registry-content-item'>
+            <div className='registry-username-box-label'>短信验证码</div>
+            <div className='verification-code-box'>
+              <Input placeholder='请输入验证码' type='number' clearable/>
+              <div 
+                className={`registry-get-verification-code ${isCountingDown ? 'disabled-registry-get-verification-code' : ''}`}
+                onClick={handleGetVerificationCode}
+                style={{ pointerEvents: isCountingDown ? 'none' : 'auto' }}
+              >
+                {isCountingDown ? `获取验证码 ${countdown}s` : '获取验证码'}
+              </div>
+            </div>
+          </div>}
+          <div className='registry-button' onClick={handleRegistryClick}>注册</div>
+        </div>
+    }
+    {
+      curTab !== TabType.REGISTER && <div className='register-content'>
+        {
+          curTab === TabType.LOGIN && <>
+            <div className='registry-content-item'>
+              <div className='registry-username-box-label'>用户名</div>
+              <Input placeholder='请输入用户名' onChange={(value) => handleRegistryFormChange('username', value)} clearable/>
+            </div>
+            <div className='registry-content-item'>
+              <div className='registry-username-box-label'>密码</div>
+              <Input placeholder='请输入密码' onChange={(value) => handleRegistryFormChange('password', value)} type='password' clearable/>
+            </div>
+          </>
+        }
+        {
+          curTab === TabType.VERIFY_CODE_LOGIN && <>
+            <div className='registry-content-item'>
+              <div className='registry-username-box-label'>手机号</div>
+              <Input placeholder='请输入手机号' onChange={(value) => handleRegistryFormChange('phone', value)} type='number' clearable/>
+            </div>
+            <div className='registry-content-item'>
+              <div className='registry-username-box-label'>短信验证码</div>
+              <Input placeholder='请输入验证码' type='number' clearable/>
+            </div>
+          </>
+        }
+        {
+          curTab === TabType.LOGIN && <div className='login-verfycode' onClick={() => setCurTab(TabType.VERIFY_CODE_LOGIN)}>验证码登陆?</div>
+        }
+        {
+          curTab === TabType.VERIFY_CODE_LOGIN && <div className='login-verfycode' onClick={() => setCurTab(TabType.LOGIN)}>密码登陆?</div>
+        }
+        <div className='registry-button' onClick={handleRegistryClick}>登录</div>
       </div>
     }
   </div>

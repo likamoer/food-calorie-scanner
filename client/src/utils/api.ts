@@ -1,17 +1,15 @@
 import axios from 'axios';
 import { Toast } from 'antd-mobile';
+import { getCacheUserInfo, serverStatusToMessage } from './utils';
 
-let baseUrl = window.location.origin
-
-// if (baseUrl.includes('localhost')) {
-//     baseUrl = 'http://154.8.136.162:3001'
-// }
+let baseUrl = window.location.origin;
 
 // 创建axios实例
 const apiClient = axios.create({
     baseURL: `${baseUrl}/api`,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getCacheUserInfo()?.token || ''}`
     },
     timeout: 5000 // 5秒超时
 });
@@ -31,18 +29,17 @@ apiClient.interceptors.response.use(
                 duration: 2000
             });
         }
-        if (error?.response?.status === 400) {
-            Toast.show({
-                icon: 'fail',
-                content: error?.response?.data?.message || '请求出错，请稍后重试',
-                duration: 2000
-            });
-        }
+        Toast.show({
+            icon: 'fail',
+            content: serverStatusToMessage(error?.response?.status) || error?.response?.data?.message,
+            duration: 2000
+        });
         // 可以在这里添加统一的网络错误处理逻辑
         return Promise.reject(error);
     }
 );
 
+// 注册接口
 export const registryUserInfo = async function (params: {
     username: string,
     password: string,
@@ -61,5 +58,20 @@ export const registryUserInfo = async function (params: {
         return data; // 返回处理后的数据供调用方使用
     } catch (error) {
         throw error; // 重新抛出错误，让调用方处理
+    }
+}
+
+// 验证token是否过期
+export const verifyToken = async function () {
+    try {
+        const response = await apiClient.post('/auth/verify');
+        const data = response.data;
+        return data; // 返回处理后的数据供调用方使用
+    } catch (error) {
+        return {
+            // @ts-ignore
+            message: error?.message || 'token验证失败',
+            code: 500
+        }
     }
 }

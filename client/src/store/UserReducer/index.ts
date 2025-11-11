@@ -1,10 +1,10 @@
 const initialState = {
     // 用户手机号
-    phoneNumber: '12345678901',
+    phoneNumber: '',
     // 用户token
     token: '',
     // 用户姓名
-    username: '燃脂每一天'
+    username: ''
 };
 export default function(state = initialState, action: { type: string; payload: any }) {
     switch(action.type) {

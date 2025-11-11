@@ -5,13 +5,14 @@ const UserService = require('./userService');
 /**
  * 认证服务类
  * 处理用户认证和Token管理
+ * 过期时间的值要统一
  */
 class AuthService {
     constructor() {
         this.db = getDatabase();
         this.userService = new UserService();
         this.jwtSecret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-        this.jwtExpireTime = process.env.JWT_EXPIRE_TIME || '24h';
+        this.jwtExpireTime = '2min';
     }
 
     /**
@@ -150,15 +151,44 @@ class AuthService {
      */
     calculateExpireTime() {
         const now = new Date();
-        let expireMs = 24 * 60 * 60 * 1000; // 默认24小时
+        let expireMs = 0;
 
-        // 解析JWT过期时间配置
-        if (this.jwtExpireTime.endsWith('h')) {
-            const hours = parseInt(this.jwtExpireTime);
-            expireMs = hours * 60 * 60 * 1000;
-        } else if (this.jwtExpireTime.endsWith('d')) {
-            const days = parseInt(this.jwtExpireTime);
-            expireMs = days * 24 * 60 * 60 * 1000;
+        // 确保this.jwtExpireTime存在且有效
+        if (!this.jwtExpireTime) {
+            // 如果未配置，使用默认24小时
+            expireMs = 24 * 60 * 60 * 1000;
+        } else {
+            const timeStr = this.jwtExpireTime.toString();
+            
+            // 解析JWT过期时间配置（仅支持h小时、d天、min分钟三种单位）
+            const hourMatch = timeStr.match(/^(\d+(?:\.\d+)?)(h)$/);
+            const dayMatch = timeStr.match(/^(\d+(?:\.\d+)?)(d)$/);
+            const minuteMatch = timeStr.match(/^(\d+(?:\.\d+)?)(min)$/);
+            
+            // 如果是纯数字，默认为小时单位
+            if (!hourMatch && !dayMatch && !minuteMatch) {
+                const numericValue = parseFloat(timeStr);
+                if (!isNaN(numericValue)) {
+                    expireMs = numericValue * 60 * 60 * 1000; // 默认为小时
+                } else {
+                    // 格式错误，使用默认24小时
+                    expireMs = 24 * 60 * 60 * 1000;
+                }
+            } else if (hourMatch) {
+                // 解析小时格式
+                expireMs = parseFloat(hourMatch[1]) * 60 * 60 * 1000;
+            } else if (dayMatch) {
+                // 解析天格式
+                expireMs = parseFloat(dayMatch[1]) * 24 * 60 * 60 * 1000;
+            } else if (minuteMatch) {
+                // 解析分钟格式
+                expireMs = parseFloat(minuteMatch[1]) * 60 * 1000;
+            }
+        }
+        
+        // 确保过期时间有效
+        if (expireMs <= 0) {
+            expireMs = 24 * 60 * 60 * 1000; // 确保至少有24小时有效期
         }
 
         const expireDate = new Date(now.getTime() + expireMs);

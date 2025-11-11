@@ -21,7 +21,7 @@ export function useCamera() {
 
 // 缓存get
 export function getCacheUserInfo() {
-    if (store.getState().userInfo) {
+    if (store.getState().userInfo?.token?.length > 0) {
         return store.getState().userInfo;
     }
     try {
@@ -56,5 +56,23 @@ export function setCacheUserInfo(value: any) {
         localStorage.setItem('userInfo', serializedValue);
     } catch (error) {
         console.error('存储到localStorage失败:', error);
+    }
+}
+
+// 后端返回的状态码
+export function serverStatusToMessage(status: number) {
+    switch (status) {
+        case 400:
+            return '请求出错，请稍后重试';
+        case 401:
+            return '未授权，请重新登录';
+        case 403:
+            return '拒绝访问';
+        case 404:
+            return '请求资源不存在';
+        case 500:
+            return '服务器内部错误，请稍后重试';
+        default:
+            return '未知错误';
     }
 }

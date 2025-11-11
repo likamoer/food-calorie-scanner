@@ -8,6 +8,7 @@ const authMiddleware = async (req, res, next) => {
     try {
         // 从请求头获取Token
         const authHeader = req.headers.authorization;
+        console.log('authHeader', authHeader);
         
         if (!authHeader) {
             return res.status(401).json({

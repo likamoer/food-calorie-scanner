@@ -11,6 +11,7 @@ import img8 from '../../assets/img8.avif';
 import img9 from '../../assets/img9.avif';
 import img10 from '../../assets/img10.avif';
 import { useJump, getCacheUserInfo } from '../../utils/utils';
+import { verifyToken } from '../../utils/api';
 import Register from './Register';
 import './index.less';
 
@@ -106,18 +107,24 @@ export default function Home() {
     let navigate = useJump();
 
     // 唤起登陆弹窗
-    function clickGetStart() {
-        if (getCacheUserInfo()?.token) {
-            navigate('/home');
-            return;
+    async function clickGetStart() {
+        const userInfo = getCacheUserInfo();
+        if (userInfo?.token) {
+            // 有token时，先调用后端接口进行token鉴权
+            const isTokenValid = await verifyToken();
+            if (isTokenValid?.code !== 500) {
+                // Token有效，直接跳转到首页
+                navigate('/home');
+                return;
+            }
         }
+        // 没有token或token无效，显示登录弹窗
         setIsShowLoginModal(true);
     }
 
     useEffect(() => {
         if (textElementRef?.current) {
             const textElement = textElementRef.current;
-            console.dir(textElement);
             const originalText = textElement.innerText;
             
             // 清空文本内容，准备开始打字机效果
