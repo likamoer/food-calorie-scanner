@@ -2,6 +2,7 @@ const express = require('express');
 const AuthService = require('../services/authService');
 const { validateLogin } = require('../middleware/validator');
 const authMiddleware = require('../middleware/auth');
+const { handleTokenVerification } = require('../utils/authUtils');
 
 const router = express.Router();
 const authService = new AuthService();
@@ -41,83 +42,187 @@ router.post('/login', validateLogin, async (req, res) => {
 
 /**
  * 验证Token接口
- * GET /api/auth/verify
+ * POST /api/auth/verify
  * 复用认证中间件逻辑，提供token有效性检查
  */
-router.post('/verify', handleTokenVerification);
+router.post('/verify', (req, res) => handleTokenVerification(req, res, authMiddleware));
 
 /**
- * 处理Token验证的主函数
+ * 发送验证码接口
+ * POST /api/auth/send-code
  */
-function handleTokenVerification(req, res) {
-    // 保存原始的res.json方法，用于后续恢复
-    const originalResJson = res.json;
-    
-    // 重写res.json方法，转换错误响应格式
-    res.json = transformResponseFormat(originalResJson);
-    
-    // 调用认证中间件进行token验证，并提供成功处理函数
-    authMiddleware(req, res, handleVerificationSuccess(req, res, originalResJson));
-}
+router.post('/send-code', async (req, res) => {
+    try {
+        const { phoneNumber } = req.body;
 
-/**
- * 创建成功处理函数
- * @param {Object} req - Express请求对象
- * @param {Object} res - Express响应对象
- * @param {Function} originalResJson - 原始的res.json方法
- * @returns {Function} 成功处理函数
- */
-function handleVerificationSuccess(req, res, originalResJson) {
-    return function() {
-        // 恢复原始的res.json方法
-        res.json = originalResJson;
+        // 验证手机号参数
+        if (!phoneNumber || typeof phoneNumber !== 'string') {
+            return res.status(400).json({
+                code: 400,
+                message: '手机号参数错误',
+                data: null
+            });
+        }
         
-        // 返回token有效信息
+        // 使用正则表达式验证中国大陆手机号格式
+        // 格式：以1开头，第二位为3-9，后面跟着9位数字
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            return res.status(400).json({
+                code: 400,
+                message: '无效的手机号格式，请输入正确的中国大陆手机号',
+                data: null
+            });
+        }
+
+        // 调用服务层发送验证码
+        const result = await authService.requestVerificationCode(phoneNumber);
+
         res.json({
             code: 200,
-            message: 'Token有效',
+            message: result.message,
             data: {
-                valid: true,
-                userId: req.user?.userId || null,
+                // 注意：生产环境不应返回验证码
+                code: result.code, // 仅用于开发测试
                 timestamp: new Date().toISOString()
             }
         });
-    };
-}
+    } catch (error) {
+        console.error('发送验证码失败:', error);
+
+        let code = 400;
+        let message = error.message || '发送验证码失败';
+
+        // 根据错误信息设置不同的状态码
+        if (message.includes('不存在') || message.includes('修改/注册')) {
+            code = 404;
+        } else if (message.includes('登陆异常')) {
+            code = 401;
+        }
+
+        res.status(code).json({
+            code,
+            message,
+            data: null
+        });
+    }
+});
 
 /**
- * 创建响应格式转换函数
- * @param {Function} originalResJson - 原始的res.json方法
- * @returns {Function} 转换后的res.json方法
+ * 用户登录接口（用户名+密码）
+ * POST /api/auth/loginByUsername
  */
-function transformResponseFormat(originalResJson) {
-    return function(data) {
-        // 检查是否是错误响应
-        if (data.code && data.code >= 400) {
-            // 转换认证中间件的错误响应为token验证格式
-            return originalResJson.call(this, {
-                code: data.code,
-                message: data.message,
-                data: {
-                    valid: false,
-                    errorType: determineErrorType(data.message),
-                    timestamp: new Date().toISOString()
-                }
+router.post('/loginByUsername', async (req, res) => {
+    try {
+        const { phone, password } = req.body;
+        
+        // 验证请求参数
+        if (!phone || !password) {
+            return res.status(400).json({
+                code: 400,
+                message: '手机号和密码不能为空',
+                data: null
             });
         }
-        // 正常响应直接传递
-        return originalResJson.call(this, data);
-    };
-}
+
+        // 调用登录服务
+        const result = await authService.loginByUsername(phone, password);
+        
+        res.json({
+            code: 200,
+            message: '登录成功',
+            data: result
+        });
+    } catch (error) {
+        console.error('登录失败:', error);
+        
+        let code = 401;
+        let message = error.message || '登录失败';
+        
+        res.status(code).json({
+            code,
+            message,
+            data: null
+        });
+    }
+});
 
 /**
- * 确定错误类型
- * @param {string} message - 错误消息
- * @returns {string} 错误类型
+ * 手机号验证码登录接口
+ * POST /api/auth/loginBySms
  */
-function determineErrorType(message) {
-    return message.includes('过期') ? 'expired' : 'invalid';
-}
+router.post('/loginBySms', async (req, res) => {
+    try {
+        const { phoneNumber, verifyCode } = req.body;
+        
+        // 验证请求参数
+        if (!phoneNumber || !verifyCode) {
+            return res.status(400).json({
+                code: 400,
+                message: '手机号和验证码不能为空',
+                data: null
+            });
+        }
+        
+        // 验证手机号类型
+        if (typeof phoneNumber !== 'string') {
+            return res.status(400).json({
+                code: 400,
+                message: '手机号参数类型错误',
+                data: null
+            });
+        }
+        
+        // 验证验证码类型
+        if (typeof verifyCode !== 'string') {
+            return res.status(400).json({
+                code: 400,
+                message: '验证码参数类型错误',
+                data: null
+            });
+        }
+        
+        // 使用正则表达式验证中国大陆手机号格式
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            return res.status(400).json({
+                code: 400,
+                message: '无效的手机号格式，请输入正确的中国大陆手机号',
+                data: null
+            });
+        }
+        
+        // 验证验证码格式（6位数字）
+        const codeRegex = /^\d{4}$/;
+        if (!codeRegex.test(verifyCode)) {
+            return res.status(400).json({
+                code: 400,
+                message: '验证码格式错误，请输入4位数字验证码',
+                data: null
+            });
+        }
+
+        // 调用登录服务
+        const result = await authService.loginBySms(phoneNumber, verifyCode);
+        
+        res.json({
+            code: 200,
+            message: '登录成功',
+            data: result
+        });
+    } catch (error) {
+        console.error('登录失败:', error);
+        
+        let code = 401;
+        let message = error.message || '登录失败';
+        
+        res.status(code).json({
+            code,
+            message,
+            data: null
+        });
+    }
+});
 
 module.exports = router;
 

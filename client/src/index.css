@@ -76,3 +76,10 @@ code {
 canvas[popover='manual'] {
   display: none;
 }
+
+.adm-toast-mask {
+  z-index: 2000;
+  .adm-toast-main {
+    max-width: none !important;
+  }
+}

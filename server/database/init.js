@@ -66,6 +66,7 @@ const createTables = (db) => {
                 phoneNumber TEXT NOT NULL UNIQUE CHECK(length(phoneNumber) = 11),
                 password TEXT NOT NULL CHECK(length(password) >= 6),
                 scanCount INTEGER DEFAULT 10 CHECK(scanCount >= 0),
+                onlineStatus INTEGER DEFAULT 0 CHECK(onlineStatus IN (0, 1)),
                 createTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updateTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
             )`,
@@ -78,6 +79,17 @@ const createTables = (db) => {
                 expireTime TEXT NOT NULL,
                 createTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+            )`,
+            
+            // 验证码表
+            `CREATE TABLE IF NOT EXISTS verification_codes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                phoneNumber TEXT NOT NULL,
+                code TEXT NOT NULL,
+                expireTime TEXT NOT NULL,
+                createTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                isUsed INTEGER DEFAULT 0 CHECK(isUsed IN (0, 1)),
+                requestCount INTEGER DEFAULT 1 CHECK(requestCount > 0)
             )`,
             
             // 订单表
@@ -113,6 +125,9 @@ const createTables = (db) => {
             'CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phoneNumber)',
             'CREATE INDEX IF NOT EXISTS idx_tokens_user ON tokens(userId)',
             'CREATE INDEX IF NOT EXISTS idx_tokens_expire ON tokens(expireTime)',
+            'CREATE INDEX IF NOT EXISTS idx_verification_phone ON verification_codes(phoneNumber)',
+            'CREATE INDEX IF NOT EXISTS idx_verification_expire ON verification_codes(expireTime)',
+            'CREATE INDEX IF NOT EXISTS idx_verification_create ON verification_codes(createTime DESC)',
             'CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(userId)',
             'CREATE INDEX IF NOT EXISTS idx_orders_orderId ON orders(orderId)',
             'CREATE INDEX IF NOT EXISTS idx_analysis_user ON analysis_records(userId)',

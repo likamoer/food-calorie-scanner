@@ -36,10 +36,13 @@ const validateCreateUser = (req, res, next) => {
         });
     }
 
-    if (phoneNumber.length !== 11 || !/^\d{11}$/.test(phoneNumber)) {
+    // 使用正则表达式验证中国大陆手机号格式
+    // 格式：以1开头，第二位为3-9，后面跟着9位数字
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    if (!phoneRegex.test(phoneNumber)) {
         return res.status(400).json({
             code: 400,
-            message: '手机号必须为11位数字',
+            message: '无效的手机号格式，请输入正确的中国大陆手机号',
             data: null
         });
     }
@@ -79,10 +82,12 @@ const validateLogin = (req, res, next) => {
         });
     }
 
-    if (phoneNumber.length !== 11 || !/^\d{11}$/.test(phoneNumber)) {
+    // 使用正则表达式验证中国大陆手机号格式
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    if (!phoneRegex.test(phoneNumber)) {
         return res.status(400).json({
             code: 400,
-            message: '手机号必须为11位数字',
+            message: '无效的手机号格式，请输入正确的中国大陆手机号',
             data: null
         });
     }

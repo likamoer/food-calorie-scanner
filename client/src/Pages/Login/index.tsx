@@ -112,7 +112,11 @@ export default function Home() {
         if (userInfo?.token) {
             // 有token时，先调用后端接口进行token鉴权
             const isTokenValid = await verifyToken();
-            if (isTokenValid?.code !== 500) {
+            if (isTokenValid?.code === 'ERR_BAD_RESPONSE') {
+                // 后端接口异常
+                return;
+            }
+            if (isTokenValid?.code === 200) {
                 // Token有效，直接跳转到首页
                 navigate('/home');
                 return;

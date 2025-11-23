@@ -45,6 +45,9 @@ router.post('/create', validateCreateUser, async (req, res) => {
         if (error.message.includes('手机号已存在')) {
             code = 400;
             message = '手机号已存在';
+        } else if (error.message.includes('用户名已存在')) {
+            code = 400;
+            message = '用户名已存在';
         } else if (error.message.includes('长度')) {
             code = 400;
             message = error.message;
@@ -108,5 +111,44 @@ router.get('/:id', authMiddleware, async (req, res) => {
     }
 });
 
-module.exports = router;
+/**
+ * 更新用户在线状态接口
+ * PUT /api/users/onlineStatus
+ * 需要认证token
+ * 如果前端不传递在线状态，则默认将在线状态置为下线
+ */
+router.put('/onlineStatus', authMiddleware, async (req, res) => {
+    try {
+        // 从认证中间件注入的用户信息中获取用户ID
+        const userId = req.user.userId;
+        // 从请求体获取在线状态，如果未提供则默认为false（下线）
+        const { isOnline = false } = req.body;
+        
+        // 确保isOnline是布尔值
+        const onlineStatus = Boolean(isOnline);
+        
+        // 将布尔值转换为数字状态码 (0: 离线, 1: 在线)
+        const statusCode = onlineStatus ? 1 : 0;
+        await userService.updateOnlineStatus(userId, statusCode);
+        
+        res.json({
+            code: 200,
+            message: '用户在线状态更新成功',
+            data: {
+                userId,
+                isOnline: onlineStatus,
+                updateTime: new Date().toISOString()
+            }
+        });
+    } catch (error) {
+        console.error('更新用户在线状态失败:', error);
+        
+        res.status(500).json({
+            code: 500,
+            message: '更新用户在线状态失败',
+            data: null
+        });
+    }
+});
 
+module.exports = router;
