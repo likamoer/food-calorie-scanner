@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AppstoreOutline, CameraOutline, UserOutline, FileOutline } from 'antd-mobile-icons';
+import { ImageUploader, Toast } from 'antd-mobile';
 import { useCamera } from '../../utils/utils';
 import './index.less';
 
@@ -11,6 +12,7 @@ export default function FooterBar(props: any) {
             return true;
         },
         afterTabChanged = () => {},
+        getImgFn = () => {},
     } = props;
     const [FooterBarArr, setFooterBarArr] = useState([
         {
@@ -45,13 +47,35 @@ export default function FooterBar(props: any) {
         },
     ]);
     const [activeKey, setActiveKey] = useState(defaultTab);
+    const [fileList, setFileList] = useState([]);
+    const imageUploaderRef = useRef<any>(null);
+    const [loading, setLoading] = useState(false);
+
     const callCameraFn = useCamera();
+
+    // 模拟上传图片
+    function mockUpload(file: any) {
+        console.log('file-上传图片:', file);
+        return {url: URL.createObjectURL(file)};
+    }
+
+    // 图片上传组件变化时触发
+    function imgComponentChange(fileList: any) {
+        console.log('fileList-图片上传组件变化时触发:', fileList);
+        if (fileList.length === 0) {
+            return;
+        }
+        getImgFn(fileList[0].url);
+    }
 
     // 切换底部bar时触发
     function clickTabItem(key: string) {
         if (key === 'photo') {
             // @ts-ignore
-            callCameraFn({});
+            if (callCameraFn({}) === false) {
+                // 如果是PC环境，则默认调用antd的组件
+                imageUploaderRef.current?.nativeElement?.click();
+            };
             return;
         }
         // 不能重复点击相同的tab
@@ -79,6 +103,18 @@ export default function FooterBar(props: any) {
 
     return (
         <div className={`footer-bar ${className || ''}`}>
+            <div style={{display: 'none'}}>
+                <ImageUploader
+                    value={fileList}
+                    maxCount={1}
+                    // @ts-ignore
+                    upload={mockUpload}
+                    onChange={imgComponentChange}
+                    // @ts-ignore
+                    ref={imageUploaderRef}
+                />
+            </div>
+
             {
                 FooterBarArr.map((item, index) => (
                     <div 

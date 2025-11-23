@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { CameraOutline } from 'antd-mobile-icons';
+import { Toast, Popup } from 'antd-mobile';
 import FooterBar from '../../components/FooterBar';
+import ResultCard from '../../components/ResultCard';
 import { useJump, useCamera, getCacheUserInfo } from '../../utils/utils';
+import dataEmpty from '../../assets/data-empty.png';
 import './index.css';
 
 // 计算当前周的日期数组（周一到周日），包含日期和星期几
@@ -52,6 +56,11 @@ export default function Home() {
         username: '燃脂每一天',
     });
     const [weekDates, setWeekDates] = useState<WeekDateInfo[]>(getCurrentWeekDates());
+    const [recordList, setRecordList] = useState([]);
+    const [isScannerEnd, setIsScannerEnd] = useState({
+        visible: false,
+        img: ''
+    });
     
     // 在组件顶层调用Hook，符合React Hooks规则
     const navigate = useJump();
@@ -65,7 +74,7 @@ export default function Home() {
             isToday: item.date === date
         })));
     }
-    // 底部蓝点击事件
+    // 底部栏点击事件
     const handleClickFooterBar = (key: string) => {
         if (key === 'photo') {
             // @ts-ignore
@@ -75,10 +84,20 @@ export default function Home() {
         // 直接使用顶层定义的navigate函数
         navigate(`/${key}`);
     }
+    // 获取相机图片
+    const getImgFn = (img: string) => {
+        // 开始调用AI接口
+        // Toast.show({
+        //     icon: 'loading',
+        //     content: '加载中…',
+        //     maskClickable: false,
+        // });
+        console.log('显示结果页');
+        setIsScannerEnd({visible: true, img});
+    }
     // 组件挂载时从缓存中获取用户信息
     useEffect(() => {
         const userInfo = getCacheUserInfo();
-        console.log('userInfo-81', userInfo);
         if (userInfo) {
             setUseInfo(userInfo);
         }
@@ -114,35 +133,45 @@ export default function Home() {
                 </div>
 
                 {/* 日常结果卡片 */}
-                <div className="daily-result-card">
-                    <div className="card-header">
-                        <div className="card-icon time-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
+                {
+                    recordList.length > 0 && <div className="daily-result-card">
+                        <div className="card-header">
+                            <div className="card-icon time-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <h3 className="card-title">Daily Result</h3>
                         </div>
-                        <h3 className="card-title">Daily Result</h3>
-                    </div>
-                    
-                    <div className="progress-section">
-                        <div className="percentage">78%</div>
                         
-                        {/* 环形进度条和卡路里信息 */}
-                        <div className="circular-progress">
-                            <svg className="progress-ring" viewBox="0 0 100 100">
-                                {/* 背景圆环 */}
-                                <circle className="progress-ring-bg" cx="50" cy="50" r="45" />
-                                {/* 进度圆环 */}
-                                <circle className="progress-ring-fill" cx="50" cy="50" r="45" />
-                            </svg>
-                            <div className="progress-text">
-                                <span className="current-calories">1155</span>
-                                <span className="total-calories">1850</span>
+                        <div className="progress-section">
+                            <div className="percentage">78%</div>
+                            
+                            {/* 环形进度条和卡路里信息 */}
+                            <div className="circular-progress">
+                                <svg className="progress-ring" viewBox="0 0 100 100">
+                                    {/* 背景圆环 */}
+                                    <circle className="progress-ring-bg" cx="50" cy="50" r="45" />
+                                    {/* 进度圆环 */}
+                                    <circle className="progress-ring-fill" cx="50" cy="50" r="45" />
+                                </svg>
+                                <div className="progress-text">
+                                    <span className="current-calories">1155</span>
+                                    <span className="total-calories">1850</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+                {
+                    recordList.length === 0 && <div className="no-record-card">
+                        <img className='no-record-card-img' src={dataEmpty} alt="" />
+                        <div className='no-record-card-text'>
+                            暂无记录,请点击 <CameraOutline/> 添加饮食记录
+                        </div>
+                    </div>
+                }
             </div>
 
             {/* 底部导航栏 */}
@@ -150,7 +179,21 @@ export default function Home() {
                 defaultTab='home'
                 className='footer-bar-box'
                 afterTabChanged={handleClickFooterBar}
+                getImgFn={getImgFn}
             />
+
+            {/* 扫描结果卡片 */}
+            {
+                isScannerEnd.visible && <Popup
+                    visible={isScannerEnd.visible}
+                    onClose={() => setIsScannerEnd({visible: false, img: ''})}
+                    onMaskClick={() => setIsScannerEnd({visible: false, img: ''})}
+                    bodyClassName='popup-body-scan-result-box'
+                    maskClassName='popup-mask-scan-result-box'
+                >
+                    <ResultCard img={isScannerEnd.img} />
+                </Popup>
+            }
 
         </div>
     );

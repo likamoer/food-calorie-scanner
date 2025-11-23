@@ -15,7 +15,7 @@ export function useCamera() {
             // @ts-ignore
             return window.cameraBridge?.postMessage(params);
         }
-        alert('当前环境不支持调用相机拍照');
+        return false;
     };
 }
 
